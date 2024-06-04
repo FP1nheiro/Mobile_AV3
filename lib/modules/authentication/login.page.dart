@@ -1,5 +1,6 @@
+import 'package:av3/modules/authentication/authentication.controller.dart';
 import 'package:av3/modules/authentication/create_account.page.dart';
-import 'package:av3/modules/home/home.page.dart';
+import 'package:av3/routes/router.scheme.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -10,6 +11,22 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  _showErrorMessage() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            titleTextStyle: TextStyle(fontSize: 20, color: Colors.black),
+            contentTextStyle: TextStyle(fontSize: 17, color: Colors.black),
+            title: Text("Possui um erro nas suas credenciais digitadas."),
+            content: Text("Verifique o E-mail e Senha digitados."),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double largura = MediaQuery.of(context).size.width;
@@ -49,8 +66,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: 36,
                 ),
                 //
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("E-mail"),
                     hintText: "Digite seu e-mail",
@@ -61,8 +79,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: 36,
                 ),
                 //
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Senha"),
                     hintText: "Digite sua senha",
@@ -75,12 +94,17 @@ class _LoginPageState extends State<LoginPage> {
                 //
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                    );
+                    AuthenticationController controller =
+                        AuthenticationController();
+
+                    bool status = controller.verfiryLogin(
+                        _emailController.text, _passwordController.text);
+
+                    if (status) {
+                      Navigator.pushReplacementNamed(context, RoutersUtil.home);
+                    } else {
+                      _showErrorMessage();
+                    }
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStatePropertyAll(
