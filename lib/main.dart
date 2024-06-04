@@ -1,4 +1,4 @@
-import 'package:av3/login.page.dart';
+import 'package:av3/modules/authentication/login.page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

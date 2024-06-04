@@ -1,5 +1,5 @@
-import 'package:av3/create_account.page.dart';
-import 'package:av3/home.page.dart';
+import 'package:av3/modules/authentication/create_account.page.dart';
+import 'package:av3/modules/home/home.page.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {

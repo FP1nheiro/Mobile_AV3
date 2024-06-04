@@ -1,4 +1,4 @@
-import 'package:av3/home.page.dart';
+import 'package:av3/modules/home/home.page.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccountPage extends StatefulWidget {
