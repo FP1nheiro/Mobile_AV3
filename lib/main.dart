@@ -1,4 +1,4 @@
-import 'package:av3/login.page.dart';
+import 'package:av3/routes/router.scheme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      routes: RoutersUtil.routers,
     );
   }
 }

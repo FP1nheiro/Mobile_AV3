@@ -1,4 +1,6 @@
-import 'package:av3/home.page.dart';
+import 'package:av3/dao/local_storage.dao.dart';
+import 'package:av3/modules/authentication/authentication.controller.dart';
+import 'package:av3/routes/router.scheme.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccountPage extends StatefulWidget {
@@ -9,6 +11,36 @@ class CreateAccountPage extends StatefulWidget {
 }
 
 class _CreateAccountPageState extends State<CreateAccountPage> {
+  final TextEditingController _nomeController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  _showErrorEmail() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            titleTextStyle: TextStyle(fontSize: 20, color: Colors.black),
+            contentTextStyle: TextStyle(fontSize: 17, color: Colors.black),
+            title: Text("Possui um erro no seu E-mail."),
+            content: Text("Verifique o E-mail digitados."),
+          );
+        });
+  }
+
+  _showErrorPassword() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            titleTextStyle: TextStyle(fontSize: 20, color: Colors.black),
+            contentTextStyle: TextStyle(fontSize: 17, color: Colors.black),
+            title: Text("Possui um erro nas sua senha."),
+            content: Text("Verifique a Senha digitados, ela deve possui mais que 8 caracteres."),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     double largura = MediaQuery.of(context).size.width;
@@ -52,8 +84,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   height: 36,
                 ),
                 //
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _nomeController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Nome"),
                     hintText: "Digite seu nome",
@@ -64,8 +97,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   height: 36,
                 ),
                 //
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("E-mail"),
                     hintText: "Digite seu e-mail",
@@ -76,8 +110,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   height: 36,
                 ),
                 //
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Senha"),
                     hintText: "Digite sua senha",
@@ -90,12 +125,24 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 //
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),                      
-                      ),
-                    );
+                    AuthenticationController controller =
+                        AuthenticationController();
+                    bool statusEmail =
+                        controller.verifyEmail(_emailController.text);
+                    bool statusPassword =
+                        controller.verifyPassowrd(_passwordController.text);
+
+                    if (statusEmail) {
+                      if (statusPassword) {
+                        LocalStorage().createAccount(_nomeController.text,
+                            _emailController.text, _passwordController.text);
+                        Navigator.pushReplacementNamed(context, RoutersUtil.home);
+                      } else {
+                        _showErrorPassword();
+                      }
+                    } else {
+                      _showErrorEmail();
+                    }
                   },
                   style: ButtonStyle(
                     fixedSize: MaterialStatePropertyAll(
